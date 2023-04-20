@@ -13,5 +13,5 @@
 ## 0.0.4 
 - update documentation
 
-## 0.0.5
+## 0.0.5+1
 - added headers support 

@@ -6,7 +6,7 @@ The `auto_http_request` library is a Dart package that provides a simple client 
 Add the following to your `pubspec.yaml` file:
 ```
 dependencies:
-  auto_http_request: ^0.0.4
+  auto_http_request: ^0.0.5+1
 ```
 
 ## Usage
