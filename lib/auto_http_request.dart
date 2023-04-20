@@ -12,12 +12,31 @@ class MyApiClient {
     http.Client? httpClient,
   }) : this.httpClient = httpClient ?? http.Client();
 
-  /// Fetches data from the API for the specified endpoint.
+  /// Sends an HTTP request to the specified endpoint with the given [method] and [body].
   ///
-  /// The [endpoint] should be a string that represents the endpoint of the API to fetch data from.
-  Future<http.Response> fetchData(String endpoint) async {
+  /// The [endpoint] should be a string that represents the endpoint of the API to send the request to.
+  /// The [method] should be a string that represents the HTTP method to use (e.g. GET, POST, PUT, DELETE).
+  /// The [body] should be a Map that represents the request body.
+  Future<http.Response> sendRequest(String endpoint, String method,
+      {Map<String, dynamic>? body}) async {
     final url = '$baseUrl/$endpoint';
-    final response = await http.get(Uri.parse(url));
+    late http.Response response;
+    switch (method) {
+      case 'GET':
+        response = await http.get(Uri.parse(url));
+        break;
+      case 'POST':
+        response = await http.post(Uri.parse(url), body: body);
+        break;
+      case 'PUT':
+        response = await http.put(Uri.parse(url), body: body);
+        break;
+      case 'DELETE':
+        response = await http.delete(Uri.parse(url));
+        break;
+      default:
+        throw Exception('Unsupported HTTP method: $method');
+    }
     return response;
   }
 }
@@ -47,17 +66,21 @@ class MyDataParser {
   }
 }
 
-/// A service that uses the [MyApiClient] to fetch data from the API and returns a [MyDataModel].
+/// A service that uses the [MyApiClient] to send HTTP requests to the API and returns a [MyDataModel].
 class MyApiService {
   final MyApiClient _client;
 
   MyApiService({required MyApiClient client}) : _client = client;
 
-  /// Fetches data from the API for the specified endpoint and returns a [MyDataModel].
+  /// Sends an HTTP request to the specified endpoint with the given [method] and [body],
+  /// and returns a [MyDataModel] representing the response data from the API.
   ///
-  /// The [endpoint] should be a string that represents the endpoint of the API to fetch data from.
-  Future<MyDataModel> getData(String endpoint) async {
-    final response = await _client.fetchData(endpoint);
+  /// The [endpoint] should be a string that represents the endpoint of the API to send the request to.
+  /// The [method] should be a string that represents the HTTP method to use (e.g. GET, POST, PUT, DELETE).
+  /// The [body] should be a Map that represents the request body.
+  Future<MyDataModel> sendRequestAndGetResponse(String endpoint, String method,
+      {Map<String, dynamic>? body}) async {
+    final response = await _client.sendRequest(endpoint, method, body: body);
     return MyDataParser.parseData(response);
   }
 }
