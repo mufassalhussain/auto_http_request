@@ -22,7 +22,7 @@ final client = MyApiClient(baseUrl: 'https://jsonplaceholder.typicode.com');
 final service = MyApiService(client: client);
 
 // GET request
-final responseGet = await service.sendRequestAndGetResponse('todos/1', 'GET');
+final responseGet = await service.sendRequestAndGetResponse('todos/1', 'GET',headers:{});
 final dataGet = responseGet.data;
 print(dataGet); // prints: {userId: 1, id: 1, title: delectus aut autem, completed: false}
 
@@ -54,8 +54,11 @@ print(dataDelete); // prints: {}
 
 ```
 
-This will return an instance of http.Response that you can use to access the response data.
+## Headers in Requests
+```
+final responseGet = await service.sendRequestAndGetResponse('todos/1', 'GET',headers:{});
 
+```
 ## Parsing API Responses
 To parse the response data into a generic data model, use `MyDataParser`:
 ```

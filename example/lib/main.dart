@@ -29,7 +29,8 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: FutureBuilder(
-            future: _apiService.sendRequestAndGetResponse('posts/1', 'GET'),
+            future: _apiService
+                .sendRequestAndGetResponse('posts/1', 'GET', headers: {}),
             builder: (context, snapshot) {
               log(snapshot.data.toString());
               if (snapshot.hasData) {
@@ -49,11 +50,14 @@ class _MyAppState extends State<MyApp> {
 }
 
 getData() async {
-  final client = MyApiClient(baseUrl: 'https://my-api.com');
+  final client = MyApiClient(
+    baseUrl: 'https://my-api.com',
+  );
   final service = MyApiService(client: client);
 
   try {
-    final myData = await service.sendRequestAndGetResponse('/users', 'GET');
+    final myData =
+        await service.sendRequestAndGetResponse('/users', 'GET', headers: {});
     print(myData);
   } catch (e) {
     print(e);

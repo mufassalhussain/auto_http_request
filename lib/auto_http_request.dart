@@ -17,22 +17,28 @@ class MyApiClient {
   /// The [endpoint] should be a string that represents the endpoint of the API to send the request to.
   /// The [method] should be a string that represents the HTTP method to use (e.g. GET, POST, PUT, DELETE).
   /// The [body] should be a Map that represents the request body.
-  Future<http.Response> sendRequest(String endpoint, String method,
-      {Map<String, dynamic>? body}) async {
+  /// The [headers] should be a Map that represents the request body.
+  Future<http.Response> sendRequest(
+    String endpoint,
+    String method, {
+    Map<String, dynamic>? body,
+    Map<String, String>? headers, // add headers parameter
+  }) async {
     final url = '$baseUrl/$endpoint';
     late http.Response response;
     switch (method) {
       case 'GET':
-        response = await http.get(Uri.parse(url));
+        response = await http.get(Uri.parse(url), headers: headers);
         break;
       case 'POST':
-        response = await http.post(Uri.parse(url), body: body);
+        response =
+            await http.post(Uri.parse(url), headers: headers, body: body);
         break;
       case 'PUT':
-        response = await http.put(Uri.parse(url), body: body);
+        response = await http.put(Uri.parse(url), headers: headers, body: body);
         break;
       case 'DELETE':
-        response = await http.delete(Uri.parse(url));
+        response = await http.delete(Uri.parse(url), headers: headers);
         break;
       default:
         throw Exception('Unsupported HTTP method: $method');
@@ -78,9 +84,11 @@ class MyApiService {
   /// The [endpoint] should be a string that represents the endpoint of the API to send the request to.
   /// The [method] should be a string that represents the HTTP method to use (e.g. GET, POST, PUT, DELETE).
   /// The [body] should be a Map that represents the request body.
+  /// The [headers] should be a Map that represents the request body.
   Future<MyDataModel> sendRequestAndGetResponse(String endpoint, String method,
-      {Map<String, dynamic>? body}) async {
-    final response = await _client.sendRequest(endpoint, method, body: body);
+      {Map<String, dynamic>? body, Map<String, String>? headers}) async {
+    final response = await _client.sendRequest(endpoint, method,
+        body: body, headers: headers);
     return MyDataParser.parseData(response);
   }
 }
